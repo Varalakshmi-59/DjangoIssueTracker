@@ -1,0 +1,312 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if form.instance.pk %}Edit Project{% else %}Create Project{% endif %} - Issue Tracker{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 py-8">
+    <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Removed max-w-3xl to allow full width -->
+        <div class="w-full">
+            <!-- Header Section with wider layout -->
+            <div class="mb-8 max-w-5xl">
+                <h1 class="text-3xl font-extrabold text-gray-900 sm:text-4xl">
+                    {% if form.instance.pk %}Edit Project{% else %}Create New Project{% endif %}
+                </h1>
+                <p class="mt-2 text-sm text-gray-600">
+                    {% if form.instance.pk %}
+                    Update your project details and team composition
+                    {% else %}
+                    Get started by filling in the information below to create your new project
+                    {% endif %}
+                </p>
+            </div>
+
+            <!-- Main Form Card - Full width with responsive padding -->
+            <div class="bg-white shadow-xl rounded-lg overflow-hidden">
+                <div class="p-6 lg:p-10">
+                    <form method="post" class="space-y-8">
+                        {% csrf_token %}
+                        
+                        <!-- Project Details Section -->
+                        <div class="space-y-6">
+                            <div class="border-b border-gray-200 pb-6">
+                                <h3 class="text-lg font-medium leading-6 text-gray-900">Project Details</h3>
+                                <p class="mt-1 text-sm text-gray-500">Basic information about your project.</p>
+                            </div>
+
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                <!-- Project Name -->
+                                <div class="lg:col-span-2">
+                                    <label for="{{ form.project_name.id_for_label }}" 
+                                           class="block text-sm font-medium text-gray-700">
+                                        Project Name
+                                    </label>
+                                    {{ form.project_name }}
+                                    {% if form.project_name.errors %}
+                                    <p class="mt-2 text-sm text-red-600" role="alert">
+                                        {{ form.project_name.errors|join:", " }}
+                                    </p>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Description -->
+                                <div class="lg:col-span-2">
+                                    <label for="{{ form.description.id_for_label }}"
+                                           class="block text-sm font-medium text-gray-700">
+                                        Description
+                                    </label>
+                                    <div class="mt-1">
+                                        {{ form.description }}
+                                    </div>
+                                    {% if form.description.errors %}
+                                    <p class="mt-2 text-sm text-red-600" role="alert">
+                                        {{ form.description.errors|join:", " }}
+                                    </p>
+                                    {% endif %}
+                                    <p class="mt-2 text-sm text-gray-500">
+                                        Brief description of your project's goals and scope.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Project Timeline Section -->
+                        <div class="space-y-6 pt-8">
+                            <div class="border-b border-gray-200 pb-6">
+                                <h3 class="text-lg font-medium leading-6 text-gray-900">Project Timeline</h3>
+                                <p class="mt-1 text-sm text-gray-500">Set your project's schedule and current status.</p>
+                            </div>
+
+                            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                                <!-- Start Date -->
+                                <div>
+                                    <label for="{{ form.start_date.id_for_label }}"
+                                           class="block text-sm font-medium text-gray-700">
+                                        Start Date
+                                    </label>
+                                    {{ form.start_date }}
+                                    {% if form.start_date.errors %}
+                                    <p class="mt-2 text-sm text-red-600" role="alert">
+                                        {{ form.start_date.errors|join:", " }}
+                                    </p>
+                                    {% endif %}
+                                </div>
+
+                                <!-- End Date -->
+                                <div>
+                                    <label for="{{ form.end_date.id_for_label }}"
+                                           class="block text-sm font-medium text-gray-700">
+                                        End Date
+                                    </label>
+                                    {{ form.end_date }}
+                                    {% if form.end_date.errors %}
+                                    <p class="mt-2 text-sm text-red-600" role="alert">
+                                        {{ form.end_date.errors|join:", " }}
+                                    </p>
+                                    {% endif %}
+                                </div>
+
+                                <!-- Status -->
+                                <div>
+                                    <label for="{{ form.status.id_for_label }}"
+                                           class="block text-sm font-medium text-gray-700">
+                                        Project Status
+                                    </label>
+                                    {{ form.status }}
+                                    {% if form.status.errors %}
+                                    <p class="mt-2 text-sm text-red-600" role="alert">
+                                        {{ form.status.errors|join:", " }}
+                                    </p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Team Section -->
+                        <div class="space-y-6 pt-8">
+                            <div class="border-b border-gray-200 pb-6">
+                                <h3 class="text-lg font-medium leading-6 text-gray-900">Team Composition</h3>
+                                <p class="mt-1 text-sm text-gray-500">Select team members who will be working on this project.</p>
+                            </div>
+
+                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                                <div class="lg:col-span-2">
+                                    <label for="{{ form.members.id_for_label }}"
+                                           class="block text-sm font-medium text-gray-700">
+                                        Project Members
+                                    </label>
+                                    {{ form.members }}
+                                    {% if form.members.errors %}
+                                    <p class="mt-2 text-sm text-red-600" role="alert">
+                                        {{ form.members.errors|join:", " }}
+                                    </p>
+                                    {% endif %}
+                                    <p class="mt-2 text-sm text-gray-500">
+                                        Hold Ctrl/Cmd to select multiple team members
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="pt-8 border-t border-gray-200">
+                            <div class="flex justify-end space-x-4">
+                                <a href="{% url 'main:project-list' %}"
+                                   class="inline-flex justify-center py-3 px-6 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    Cancel
+                                </a>
+                                <button type="submit"
+                                        class="inline-flex justify-center py-3 px-6 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    {% if form.instance.pk %}Save Changes{% else %}Create Project{% endif %}
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Base form controls with consistent styling */
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="number"],
+    input[type="url"],
+    input[type="search"],
+    textarea,
+    select {
+        width: 100% !important;
+        padding: 0.75rem 1rem !important;
+        border: 1px solid #e5e7eb !important;
+        border-radius: 0.5rem !important;
+        font-size: 1rem !important;
+        line-height: 1.5 !important;
+        background-color: #ffffff !important;
+        color: #1f2937 !important;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+        transition: all 0.2s ease-in-out !important;
+        min-height: 2.75rem !important;
+    }
+
+    /* Date inputs - Less restrictive styling to maintain functionality */
+    input[type="datetime-local"],
+    input[type="date"] {
+        width: 100% !important;
+        padding: 0.625rem 0.75rem !important;
+        border: 1px solid #e5e7eb !important;
+        border-radius: 0.5rem !important;
+        font-size: 1rem !important;
+        color: #1f2937 !important;
+        background-color: #ffffff !important;
+        min-height: 2.75rem !important;
+    }
+
+    /* Focus states */
+    input:focus:not([type="datetime-local"]):not([type="date"]),
+    textarea:focus,
+    select:focus {
+        outline: none !important;
+        border-color: #6366f1 !important;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2) !important;
+    }
+
+    /* Textarea specific */
+    textarea {
+        min-height: 120px !important;
+        resize: vertical !important;
+    }
+
+    /* Multiple select */
+    select[multiple] {
+        min-height: 160px !important;
+        padding: 0.5rem !important;
+    }
+
+    select[multiple] option {
+        padding: 0.5rem 1rem !important;
+        margin: 0.25rem 0 !important;
+    }
+
+    select[multiple] option:hover {
+        background-color: #f3f4f6 !important;
+    }
+
+    /* Custom scrollbar styling */
+    textarea::-webkit-scrollbar,
+    select[multiple]::-webkit-scrollbar {
+        width: 8px !important;
+    }
+
+    textarea::-webkit-scrollbar-track,
+    select[multiple]::-webkit-scrollbar-track {
+        background: #f1f5f9 !important;
+        border-radius: 4px !important;
+    }
+
+    textarea::-webkit-scrollbar-thumb,
+    select[multiple]::-webkit-scrollbar-thumb {
+        background: #cbd5e1 !important;
+        border-radius: 4px !important;
+    }
+
+    /* Placeholder styling */
+    input::placeholder,
+    textarea::placeholder {
+        color: #9ca3af !important;
+    }
+
+    /* Disabled state */
+    input:disabled,
+    textarea:disabled,
+    select:disabled {
+        background-color: #f3f4f6 !important;
+        cursor: not-allowed !important;
+        opacity: 0.7 !important;
+    }
+
+    /* Error state */
+    .error input,
+    .error textarea,
+    .error select {
+        border-color: #ef4444 !important;
+    }
+
+    /* Select dropdown arrow */
+    select:not([multiple]) {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e") !important;
+        background-position: right 0.75rem center !important;
+        background-repeat: no-repeat !important;
+        background-size: 1.5em 1.5em !important;
+        padding-right: 2.5rem !important;
+    }
+
+    /* Label styling */
+    label {
+        display: block !important;
+        margin-bottom: 0.5rem !important;
+        font-size: 0.875rem !important;
+        font-weight: 500 !important;
+        color: #374151 !important;
+    }
+
+    /* Help text */
+    .help-text {
+        margin-top: 0.5rem !important;
+        font-size: 0.875rem !important;
+        color: #6b7280 !important;
+    }
+
+    /* Error message */
+    .error-message {
+        margin-top: 0.5rem !important;
+        font-size: 0.875rem !important;
+        color: #ef4444 !important;
+    }
+</style>
+{% endblock %}
+

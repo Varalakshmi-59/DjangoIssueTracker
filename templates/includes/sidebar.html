@@ -1,0 +1,61 @@
+<aside class="w-64 bg-white shadow-lg h-screen">
+    <div class="px-4 py-6">
+        <nav>
+            <div class="space-y-1">
+                <!-- Dashboard -->
+                <a href="{% url 'main:dashboard' %}"
+                   class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-md">
+                    <span class="ml-3">Dashboard</span>
+                </a>
+
+                <!-- Projects -->
+                <div class="space-y-1">
+                    <a href="{% url 'main:project-list' %}"
+                       class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-md">
+                        <span class="ml-3">Projects</span>
+                    </a>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'main:project-create' %}"
+                       class="flex items-center px-8 py-2 text-gray-600 hover:bg-gray-100 rounded-md text-sm">
+                        <span class="ml-3">Create Project</span>
+                    </a>
+                    {% endif %}
+                </div>
+
+                <!-- Issues -->
+                <div class="space-y-1">
+                    <a href="{% url 'main:issue-list' %}"
+                       class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-md">
+                        <span class="ml-3">Issues</span>
+                    </a>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'main:issue-create' %}"
+                       class="flex items-center px-8 py-2 text-gray-600 hover:bg-gray-100 rounded-md text-sm">
+                        <span class="ml-3">Create Issue</span>
+                    </a>
+                    {% endif %}
+                </div>
+
+                <!-- Issues -->
+                <div class="space-y-1">
+                    <a href="/swagger/"
+                       class="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-md">
+                        <span class="ml-3">API</span>
+                    </a>
+                    <a href="/swagger/"
+                       class="flex items-center px-8 py-2 text-gray-600 hover:bg-gray-100 rounded-md text-sm">
+                        <span class="ml-3">Swagger UI</span>
+                    </a>
+                    <a href="/swagger.json"
+                       class="flex items-center px-8 py-2 text-gray-600 hover:bg-gray-100 rounded-md text-sm">
+                        <span class="ml-3">Swagger Schema</span>
+                    </a>
+                    <a href="/redoc/"
+                       class="flex items-center px-8 py-2 text-gray-600 hover:bg-gray-100 rounded-md text-sm">
+                        <span class="ml-3">ReDoc</span>
+                    </a>
+                </div>
+            </div>
+        </nav>
+    </div>
+</aside>

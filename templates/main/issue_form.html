@@ -1,0 +1,300 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
+    <div class="px-4 py-6 sm:px-0">
+        <div class="bg-white shadow rounded-lg p-6">
+            <h2 class="text-2xl font-bold mb-6">
+                {% if form.instance.pk %}
+                    Edit Issue
+                {% else %}
+                    Create New Issue
+                {% endif %}
+            </h2>
+
+            <form method="post" class="space-y-6">
+                {% csrf_token %}
+                
+                {% if form.non_field_errors %}
+                <div class="rounded-md bg-red-50 p-4 mb-4">
+                    <div class="flex">
+                        <div class="text-red-700">
+                            {{ form.non_field_errors }}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Title Field -->
+                <div>
+                    <label for="{{ form.title.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                        Title
+                    </label>
+                    {{ form.title }}
+                    {% if form.title.help_text %}
+                        <p class="mt-1 text-sm text-gray-500">{{ form.title.help_text }}</p>
+                    {% endif %}
+                    {% if form.title.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.title.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Project Field -->
+                <div>
+                    <label for="{{ form.project.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                        Project
+                    </label>
+                    {{ form.project }}
+                    {% if form.project.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.project.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Type Field -->
+                <div>
+                    <label for="{{ form.type.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                        Type
+                    </label>
+                    {{ form.type }}
+                    {% if form.type.help_text %}
+                        <p class="mt-1 text-sm text-gray-500">{{ form.type.help_text }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Description Field -->
+                <div>
+                    <label for="{{ form.description.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                        Description
+                    </label>
+                    {{ form.description }}
+                    {% if form.description.help_text %}
+                        <p class="mt-1 text-sm text-gray-500">{{ form.description.help_text }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Priority and Status in a grid -->
+                <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                    <div>
+                        <label for="{{ form.priority.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                            Priority
+                        </label>
+                        {{ form.priority }}
+                        {% if form.priority.help_text %}
+                            <p class="mt-1 text-sm text-gray-500">{{ form.priority.help_text }}</p>
+                        {% endif %}
+                    </div>
+
+                    <div>
+                        <label for="{{ form.status.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                            Status
+                        </label>
+                        {{ form.status }}
+                    </div>
+                </div>
+
+                <!-- Assignees Field -->
+                <div>
+                    <label for="{{ form.assignees.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                        Assignees
+                    </label>
+                    {{ form.assignees }}
+                    {% if form.assignees.help_text %}
+                        <p class="mt-1 text-sm text-gray-500">{{ form.assignees.help_text }}</p>
+                    {% endif %}
+                    {% if form.assignees.errors %}
+                        <p class="mt-1 text-sm text-red-600">{{ form.assignees.errors.0 }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Labels Field -->
+                <div>
+                    <label for="{{ form.labels.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                        Labels
+                    </label>
+                    {{ form.labels }}
+                    {% if form.labels.help_text %}
+                        <p class="mt-1 text-sm text-gray-500">{{ form.labels.help_text }}</p>
+                    {% endif %}
+                </div>
+
+                <!-- Submit Button -->
+                <div class="flex justify-end space-x-3">
+                    <a href="{% url 'main:issue-list' %}" class="inline-flex justify-center py-2 px-4 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        Cancel
+                    </a>
+                    <button type="submit" class="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        {% if form.instance.pk %}
+                            Update Issue
+                        {% else %}
+                            Create Issue
+                        {% endif %}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% block extra_js %}
+<script>
+    // Dynamic assignees filtering based on selected project
+    document.getElementById('{{ form.project.id_for_label }}').addEventListener('change', function(e) {
+        const projectId = e.target.value;
+        if (projectId) {
+            fetch(`/api/projects/${projectId}/members/`)
+                .then(response => response.json())
+                .then(data => {
+                    const assigneeSelect = document.getElementById('{{ form.assignees.id_for_label }}');
+                    assigneeSelect.innerHTML = '';
+                    data.forEach(member => {
+                        const option = new Option(member.name, member.id);
+                        assigneeSelect.add(option);
+                    });
+                });
+        }
+    });
+</script>
+{% endblock %}
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Base form controls with consistent styling */
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="number"],
+    input[type="url"],
+    input[type="search"],
+    textarea,
+    select {
+        width: 100% !important;
+        padding: 0.75rem 1rem !important;
+        border: 1px solid #e5e7eb !important;
+        border-radius: 0.5rem !important;
+        font-size: 1rem !important;
+        line-height: 1.5 !important;
+        background-color: #ffffff !important;
+        color: #1f2937 !important;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05) !important;
+        transition: all 0.2s ease-in-out !important;
+        min-height: 2.75rem !important;
+    }
+
+    /* Date inputs - Less restrictive styling to maintain functionality */
+    input[type="datetime-local"],
+    input[type="date"] {
+        width: 100% !important;
+        padding: 0.625rem 0.75rem !important;
+        border: 1px solid #e5e7eb !important;
+        border-radius: 0.5rem !important;
+        font-size: 1rem !important;
+        color: #1f2937 !important;
+        background-color: #ffffff !important;
+        min-height: 2.75rem !important;
+    }
+
+    /* Focus states */
+    input:focus:not([type="datetime-local"]):not([type="date"]),
+    textarea:focus,
+    select:focus {
+        outline: none !important;
+        border-color: #6366f1 !important;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2) !important;
+    }
+
+    /* Textarea specific */
+    textarea {
+        min-height: 120px !important;
+        resize: vertical !important;
+    }
+
+    /* Multiple select */
+    select[multiple] {
+        min-height: 160px !important;
+        padding: 0.5rem !important;
+    }
+
+    select[multiple] option {
+        padding: 0.5rem 1rem !important;
+        margin: 0.25rem 0 !important;
+    }
+
+    select[multiple] option:hover {
+        background-color: #f3f4f6 !important;
+    }
+
+    /* Custom scrollbar styling */
+    textarea::-webkit-scrollbar,
+    select[multiple]::-webkit-scrollbar {
+        width: 8px !important;
+    }
+
+    textarea::-webkit-scrollbar-track,
+    select[multiple]::-webkit-scrollbar-track {
+        background: #f1f5f9 !important;
+        border-radius: 4px !important;
+    }
+
+    textarea::-webkit-scrollbar-thumb,
+    select[multiple]::-webkit-scrollbar-thumb {
+        background: #cbd5e1 !important;
+        border-radius: 4px !important;
+    }
+
+    /* Placeholder styling */
+    input::placeholder,
+    textarea::placeholder {
+        color: #9ca3af !important;
+    }
+
+    /* Disabled state */
+    input:disabled,
+    textarea:disabled,
+    select:disabled {
+        background-color: #f3f4f6 !important;
+        cursor: not-allowed !important;
+        opacity: 0.7 !important;
+    }
+
+    /* Error state */
+    .error input,
+    .error textarea,
+    .error select {
+        border-color: #ef4444 !important;
+    }
+
+    /* Select dropdown arrow */
+    select:not([multiple]) {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e") !important;
+        background-position: right 0.75rem center !important;
+        background-repeat: no-repeat !important;
+        background-size: 1.5em 1.5em !important;
+        padding-right: 2.5rem !important;
+    }
+
+    /* Label styling */
+    label {
+        display: block !important;
+        margin-bottom: 0.5rem !important;
+        font-size: 0.875rem !important;
+        font-weight: 500 !important;
+        color: #374151 !important;
+    }
+
+    /* Help text */
+    .help-text {
+        margin-top: 0.5rem !important;
+        font-size: 0.875rem !important;
+        color: #6b7280 !important;
+    }
+
+    /* Error message */
+    .error-message {
+        margin-top: 0.5rem !important;
+        font-size: 0.875rem !important;
+        color: #ef4444 !important;
+    }
+</style>
+{% endblock %}

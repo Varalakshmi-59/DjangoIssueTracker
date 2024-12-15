@@ -1,0 +1,57 @@
+<nav class="bg-indigo-600">
+    <div class="mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex h-16 items-center justify-between">
+            <!-- Logo/Brand -->
+            <div class="flex items-center">
+                <div class="flex-shrink-0">
+                    <a href="{% url 'main:dashboard' %}" class="text-white font-bold text-xl">
+                        Issue Tracker
+                    </a>
+                </div>
+            </div>
+
+            <!-- Navigation Links -->
+            <div class="hidden md:block">
+                <div class="ml-10 flex items-baseline space-x-4">
+                    <a href="{% url 'main:project-list' %}" 
+                       class="text-white hover:bg-indigo-500 px-3 py-2 rounded-md text-sm font-medium">
+                        Projects
+                    </a>
+                    <a href="{% url 'main:issue-list' %}"
+                       class="text-white hover:bg-indigo-500 px-3 py-2 rounded-md text-sm font-medium">
+                        Issues
+                    </a>
+                </div>
+            </div>
+
+            <!-- User Menu -->
+            <div class="hidden md:block">
+                <div class="ml-4 flex items-center md:ml-6">
+                    {% if user.is_authenticated %}
+                        <div class="relative ml-3">
+                            <div class="flex items-center">
+                                <a href="{% url 'users:profile' %}" 
+                                   class="text-white hover:bg-indigo-500 px-3 py-2 rounded-md text-sm font-medium">
+                                    {{ user.username }}
+                                </a>
+                                <a href="{% url 'users:logout' %}"
+                                   class="text-white hover:bg-indigo-500 px-3 py-2 rounded-md text-sm font-medium">
+                                    Logout
+                                </a>
+                            </div>
+                        </div>
+                    {% else %}
+                        <a href="{% url 'users:login' %}"
+                           class="text-white hover:bg-indigo-500 px-3 py-2 rounded-md text-sm font-medium">
+                            Login
+                        </a>
+                        <a href="{% url 'users:register' %}"
+                           class="text-white hover:bg-indigo-500 px-3 py-2 rounded-md text-sm font-medium">
+                            Register
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>

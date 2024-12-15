@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Issue Tracker{% endblock %}</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Additional Styles -->
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-gray-50">
+    <!-- Navigation -->
+    {% include 'includes/navbar.html' %}
+    
+    <!-- Main Content -->
+    <div class="flex">
+        {% include 'includes/sidebar.html' %}
+        
+        <main class="flex-1 p-6">
+            {% include 'includes/messages.html' %}
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <!-- Additional Scripts -->
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
